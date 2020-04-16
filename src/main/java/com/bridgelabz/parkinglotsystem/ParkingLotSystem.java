@@ -1,18 +1,27 @@
 package com.bridgelabz.parkinglotsystem;
 
 public class ParkingLotSystem {
+    private int parkingLotCapacity;
+    private int recentParkingLotSize;
     private Object vehicle;
 
-    public boolean isPark(Object vehicle) {
+    public ParkingLotSystem(int parkingLotCapacity) {
+        this.parkingLotCapacity = parkingLotCapacity;
+    }
+
+    public boolean isPark(Object vehicle) throws ParkingLotException {
+        if (this.recentParkingLotSize == this.parkingLotCapacity)
+            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking Lot is full.");
         this.vehicle = vehicle;
+        recentParkingLotSize++;
         return true;
     }
 
-    public boolean isUnPark(Object vehicle) {
+    public boolean isUnPark(Object vehicle) throws ParkingLotException {
         if (this.vehicle != null && this.vehicle.equals(vehicle)) {
             this.vehicle = null;
             return true;
         }
-        return false;
+        throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "No such vehicle found.");
     }
 }
