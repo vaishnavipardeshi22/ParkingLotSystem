@@ -5,6 +5,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 public class ParkingLotSystemTest {
     ParkingLotSystem parkingLotSystem = null;
     Object vehicle = null;
@@ -182,6 +184,21 @@ public class ParkingLotSystemTest {
             ParkingLotAttendant myAttendant = parkingLotSystem.getMyVehicle(new ParkingLotAttendant(new Object()));
         } catch (ParkingLotException e) {
             Assert.assertEquals(ParkingLotException.ExceptionType.NO_SUCH_ATTENDANT, e.type);
+        }
+    }
+
+    @Test
+    public void givenParkingLot_ShouldFindVehicle() {
+        parkingLotSystem.setParkingLotCapacity(10);
+        parkingLotSystem.initializeParkingLot();
+        ArrayList<Integer> slot = parkingLotSystem.getSlot();
+        try {
+            parkingLotSystem.parkVehicle(slot.get(0), new Object());
+            parkingLotSystem.parkVehicle(slot.get(1), vehicle);
+            int slotNumber = parkingLotSystem.findVehicle(this.vehicle);
+            Assert.assertEquals(1, slotNumber);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
         }
     }
 }
