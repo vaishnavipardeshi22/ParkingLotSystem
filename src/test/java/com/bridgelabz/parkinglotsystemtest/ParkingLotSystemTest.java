@@ -129,4 +129,59 @@ public class ParkingLotSystemTest {
         boolean isParkingLotFull = parkingLotOwner.isParkingLotEmpty();
         Assert.assertFalse(isParkingLotFull);
     }
+
+    @Test
+    public void givenParkingLotSlot_ShouldAttendantParkCar() {
+        try {
+            ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+            parkingLotSystem.registerParkingHandler(parkingLotOwner);
+            ParkingLotAttendant parkingLotAttendant = new ParkingLotAttendant(vehicle);
+            ParkingLotAttendant attendant = parkingLotSystem.getParkingLotAttendant(parkingLotAttendant);
+            Assert.assertEquals(attendant, parkingLotAttendant);
+        } catch (ParkingLotException e) {
+        }
+    }
+
+    @Test
+    public void givenParkingLot_WhenParkingLtIsFull_AttendantShouldThrowException() {
+        try {
+            ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+            parkingLotSystem.registerParkingHandler(parkingLotOwner);
+            ParkingLotAttendant attendant1 = new ParkingLotAttendant(vehicle);
+            ParkingLotAttendant attendant2 = new ParkingLotAttendant(new Object());
+            ParkingLotAttendant attendant3 = new ParkingLotAttendant(vehicle);
+            parkingLotSystem.getParkingLotAttendant(attendant1);
+            parkingLotSystem.getParkingLotAttendant(attendant2);
+            parkingLotSystem.getParkingLotAttendant(attendant3);
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.PARKING_IS_FULL, e.type);
+        }
+    }
+
+    @Test
+    public void givenParkingLot_ShouldReturnAttendant() {
+        ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+        parkingLotSystem.registerParkingHandler(parkingLotOwner);
+        try {
+            ParkingLotAttendant attendant = new ParkingLotAttendant(vehicle);
+            parkingLotSystem.getParkingLotAttendant(attendant);
+            ParkingLotAttendant myAttendant = parkingLotSystem.getMyVehicle(attendant);
+            Assert.assertEquals(attendant, myAttendant);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenParkingLot_WhenAttendantNotAvailable_ThenThrowException() {
+        ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
+        parkingLotSystem.registerParkingHandler(parkingLotOwner);
+        try {
+            ParkingLotAttendant attendant = new ParkingLotAttendant(vehicle);
+            parkingLotSystem.getParkingLotAttendant(attendant);
+            ParkingLotAttendant myAttendant = parkingLotSystem.getMyVehicle(new ParkingLotAttendant(new Object()));
+        } catch (ParkingLotException e) {
+            Assert.assertEquals(ParkingLotException.ExceptionType.NO_SUCH_ATTENDANT, e.type);
+        }
+    }
 }
