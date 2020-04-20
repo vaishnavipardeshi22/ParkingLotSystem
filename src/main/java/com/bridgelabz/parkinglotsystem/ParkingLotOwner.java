@@ -2,14 +2,23 @@ package com.bridgelabz.parkinglotsystem;
 
 public class ParkingLotOwner implements ParkingLotHandler {
 
-    private Boolean parkingIsFull;
+    private boolean parkingCapacity;
 
     public boolean isParkingLotFull() {
-        return parkingIsFull;
+        return this.parkingCapacity;
+    }
+
+    public boolean isParkingLotEmpty() {
+        return this.parkingCapacity;
     }
 
     @Override
     public void parkingIsFull() {
-        parkingIsFull = true;
+        this.parkingCapacity = true;
+    }
+
+    @Override
+    public void parkingIsEmpty() {
+        this.parkingCapacity = false;
     }
 }

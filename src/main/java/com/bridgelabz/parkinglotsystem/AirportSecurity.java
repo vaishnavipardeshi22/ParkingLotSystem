@@ -2,14 +2,19 @@ package com.bridgelabz.parkinglotsystem;
 
 public class AirportSecurity implements ParkingLotHandler {
 
-    private Boolean parkingIsFull;
+    private boolean parkingCapacity;
 
-    public Boolean isParkingLotFull() {
-        return parkingIsFull;
+    public boolean isParkingLotFull() {
+        return this.parkingCapacity;
     }
 
     @Override
     public void parkingIsFull() {
-        parkingIsFull = true;
+        this.parkingCapacity = true;
+    }
+
+    @Override
+    public void parkingIsEmpty() {
+        this.parkingCapacity = false;
     }
 }
