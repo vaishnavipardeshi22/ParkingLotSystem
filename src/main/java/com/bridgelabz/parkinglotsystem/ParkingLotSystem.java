@@ -8,8 +8,7 @@ import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
     private int parkingLotCapacity;
-    private ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
-    private List<Object> vehicles;
+    private List<ParkingTimeSlot> vehicles;
     private List<ParkingLotHandler> parkingLotHandler;
     Map<Integer, Object> vehicleSlotMap = new HashMap<>();
 
@@ -28,27 +27,33 @@ public class ParkingLotSystem {
     }
 
     public void isPark(Object vehicle) throws ParkingLotException {
-        if (this.vehicles.size() == this.parkingLotCapacity) {
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+        if (!this.vehicles.contains(null)) {
             for (ParkingLotHandler handler : parkingLotHandler)
                 handler.parkingIsFull();
             throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
         }
         if (isVehiclePark(vehicle))
             throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,"Vehicle not found." );
-        this.vehicles.add(vehicle);
+        int slot = getParkingSlot();
+        this.vehicles.set(slot, parkingTimeSlot);
     }
 
     public boolean isVehiclePark(Object vehicle) {
-        if (this.vehicles.contains(vehicle)) return true;
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+        if (this.vehicles.contains(parkingTimeSlot)) return true;
         return false;
     }
 
     public boolean isUnPark(Object vehicle) throws ParkingLotException {
-        if (this.vehicles.contains(vehicle)) {
-            this.vehicles.remove(vehicle);
-            for (ParkingLotHandler handler : parkingLotHandler)
-                handler.parkingIsEmpty();
-            return true;
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+        for (int slotNumber = 0; slotNumber < this.vehicles.size(); slotNumber++ ) {
+            if (this.vehicles.contains(parkingTimeSlot)) {
+                this.vehicles.set(slotNumber, null);
+                for (ParkingLotHandler handler : parkingLotHandler)
+                    handler.parkingIsEmpty();
+                return true;
+            }
         }
         throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
     }
@@ -67,10 +72,13 @@ public class ParkingLotSystem {
         return vehicles.size();
     }
 
-    public void parkVehicle(int slot, Object vehicle) throws ParkingLotException {
-        if (isVehiclePark(vehicle))
-            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
-        this.vehicles.set(slot, vehicle);
+    public int getParkingSlot() throws ParkingLotException {
+        ArrayList<Integer> slotList = getSlot();
+        for (int slot = 0; slot < slotList.size(); slot++) {
+            if (slotList.get(0) == (slot))
+                return slot;
+        }
+        throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
     }
 
     public ParkingLotAttendant getParkingLotAttendant(ParkingLotAttendant attendant) throws ParkingLotException {
@@ -86,17 +94,27 @@ public class ParkingLotSystem {
     }
 
     public int findVehicle(Object vehicle) throws ParkingLotException {
-        if (this.vehicles.contains(vehicle))
-            return this.vehicles.indexOf(vehicle);
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+        if (this.vehicles.contains(parkingTimeSlot))
+            return this.vehicles.indexOf(parkingTimeSlot);
         throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "No such vehicle found.");
     }
 
     public ArrayList getSlot() {
-        ArrayList<Integer> slots = new ArrayList<>();
+        ArrayList slots = new ArrayList();
         for (int slot = 0; slot < this.parkingLotCapacity; slot++) {
             if (this.vehicles.get(slot) == null)
                 slots.add(slot);
         }
         return slots;
+    }
+
+    public boolean setTime(Object vehicle) {
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+        for (int i = 0; i < this.vehicles.size(); i++) {
+            if (this.vehicles.get(i).time != null && this.vehicles.contains(parkingTimeSlot))
+                return true;
+        }
+        return false;
     }
 }
