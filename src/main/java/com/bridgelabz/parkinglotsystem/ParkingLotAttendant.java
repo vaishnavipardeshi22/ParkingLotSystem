@@ -11,11 +11,6 @@ public class ParkingLotAttendant {
         this.vehicle = vehicle;
     }
 
-    public ParkingLotAttendant(List parkingSlots, Object vehicle) {
-        this.parkingSlots = parkingSlots;
-        this.vehicle = vehicle;
-    }
-
     public Object getVehicle() {
         return vehicle;
     }

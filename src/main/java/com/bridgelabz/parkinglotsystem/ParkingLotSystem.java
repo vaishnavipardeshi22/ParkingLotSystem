@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class ParkingLotSystem {
     private int parkingLotCapacity;
@@ -61,6 +62,17 @@ public class ParkingLotSystem {
         vehicleSlotMap.put(slot, vehicle);
     }
 
+    public int initializeParkingLot() {
+        IntStream.range(0, this.parkingLotCapacity).forEach(slots -> vehicles.add(null));
+        return vehicles.size();
+    }
+
+    public void parkVehicle(int slot, Object vehicle) throws ParkingLotException {
+        if (isVehiclePark(vehicle))
+            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
+        this.vehicles.set(slot, vehicle);
+    }
+
     public ParkingLotAttendant getParkingLotAttendant(ParkingLotAttendant attendant) throws ParkingLotException {
         ParkingLotOwner parkingLotOwner = (ParkingLotOwner) parkingLotHandler.get(0);
         isPark(parkingLotOwner.getParkingSlot(), attendant.getVehicle());
@@ -71,5 +83,20 @@ public class ParkingLotSystem {
         if (vehicleSlotMap.containsValue(attendant.getVehicle()))
             return attendant;
         throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_ATTENDANT, "No attendant found.");
+    }
+
+    public int findVehicle(Object vehicle) throws ParkingLotException {
+        if (this.vehicles.contains(vehicle))
+            return this.vehicles.indexOf(vehicle);
+        throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "No such vehicle found.");
+    }
+
+    public ArrayList getSlot() {
+        ArrayList<Integer> slots = new ArrayList<>();
+        for (int slot = 0; slot < this.parkingLotCapacity; slot++) {
+            if (this.vehicles.get(slot) == null)
+                slots.add(slot);
+        }
+        return slots;
     }
 }
