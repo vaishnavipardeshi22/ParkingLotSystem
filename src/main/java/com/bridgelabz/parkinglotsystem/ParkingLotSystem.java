@@ -1,13 +1,16 @@
 package com.bridgelabz.parkinglotsystem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ParkingLotSystem {
     private int parkingLotCapacity;
     private ParkingLotOwner parkingLotOwner = new ParkingLotOwner();
     private List<Object> vehicles;
     private List<ParkingLotHandler> parkingLotHandler;
+    Map<Integer, Object> vehicleSlotMap = new HashMap<>();
 
     public ParkingLotSystem(int parkingLotCapacity) {
         this.parkingLotCapacity = parkingLotCapacity;
@@ -47,5 +50,26 @@ public class ParkingLotSystem {
             return true;
         }
         throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
+    }
+
+    public void isPark(int slot, Object vehicle) throws ParkingLotException {
+        if (this.vehicleSlotMap.size() == this.parkingLotCapacity) {
+            for (ParkingLotHandler handler : parkingLotHandler)
+                handler.parkingIsFull();
+            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
+        }
+        vehicleSlotMap.put(slot, vehicle);
+    }
+
+    public ParkingLotAttendant getParkingLotAttendant(ParkingLotAttendant attendant) throws ParkingLotException {
+        ParkingLotOwner parkingLotOwner = (ParkingLotOwner) parkingLotHandler.get(0);
+        isPark(parkingLotOwner.getParkingSlot(), attendant.getVehicle());
+        return attendant;
+    }
+
+    public ParkingLotAttendant getMyVehicle(ParkingLotAttendant attendant) throws ParkingLotException {
+        if (vehicleSlotMap.containsValue(attendant.getVehicle()))
+            return attendant;
+        throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_ATTENDANT, "No attendant found.");
     }
 }

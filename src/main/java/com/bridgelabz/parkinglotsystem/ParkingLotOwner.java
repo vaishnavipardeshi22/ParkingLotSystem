@@ -3,6 +3,7 @@ package com.bridgelabz.parkinglotsystem;
 public class ParkingLotOwner implements ParkingLotHandler {
 
     private boolean parkingCapacity;
+    private int count = 0;
 
     public boolean isParkingLotFull() {
         return this.parkingCapacity;
@@ -20,5 +21,9 @@ public class ParkingLotOwner implements ParkingLotHandler {
     @Override
     public void parkingIsEmpty() {
         this.parkingCapacity = false;
+    }
+
+    public int getParkingSlot() {
+        return count++;
     }
 }
