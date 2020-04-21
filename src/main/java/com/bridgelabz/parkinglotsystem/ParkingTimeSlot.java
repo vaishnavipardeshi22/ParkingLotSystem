@@ -7,12 +7,17 @@ public class ParkingTimeSlot {
 
     protected LocalDateTime time;
     protected Object vehicle;
+    private ParkingStrategy driverType;
+
+    public ParkingTimeSlot(ParkingStrategy driverType, Object vehicle) {
+        this.vehicle = vehicle;
+        this.time = LocalDateTime.now();
+        this.driverType = driverType;
+    }
 
     public ParkingTimeSlot(Object vehicle) {
         this.vehicle = vehicle;
-        this.time = LocalDateTime.now();
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

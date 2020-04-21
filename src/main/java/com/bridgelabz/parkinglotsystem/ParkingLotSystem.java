@@ -20,11 +20,9 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public void isPark(Object vehicle) throws ParkingLotException {
-        List<ParkingLot> parkingLot = this.parkingLotList;
-        Collections.sort(parkingLot, Comparator.comparing(list -> list.getSlot().size(), Comparator.reverseOrder()));
-        ParkingLot lot = parkingLot.get(0);
-        lot.isPark(vehicle);
+    public void isPark(ParkingStrategy driverType, Object vehicle) throws ParkingLotException {
+        ParkingLot lot = driverType.getParkingLot(this.parkingLotList);
+        lot.isPark(driverType, vehicle);
     }
 
     public boolean isVehiclePark(Object vehicle) {

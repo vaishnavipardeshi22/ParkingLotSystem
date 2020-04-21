@@ -12,9 +12,6 @@ public class ParkingLot {
     private List<ParkingLotHandler> parkingLotHandler;
     Map<Integer, Object> vehicleSlotMap = new HashMap<>();
 
-    public ParkingLot() {
-    }
-
     public ParkingLot(int parkingLotCapacity) {
         this.parkingLotCapacity = parkingLotCapacity;
         this.parkingLotHandler = new ArrayList<>();
@@ -29,8 +26,8 @@ public class ParkingLot {
         this.parkingLotCapacity = parkingLotCapacity;
     }
 
-    public void isPark(Object vehicle) throws ParkingLotException {
-        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
+    public void isPark(ParkingStrategy driverType, Object vehicle) throws ParkingLotException {
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(driverType, vehicle);
         if (!this.vehicles.contains(null)) {
             for (ParkingLotHandler handler : parkingLotHandler)
                 handler.parkingIsFull();
@@ -81,7 +78,7 @@ public class ParkingLot {
             if (slotList.get(0) == (slot))
                 return slot;
         }
-        throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
+        throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking is full.");
     }
 
     public ParkingLotAttendant getParkingLotAttendant(ParkingLotAttendant attendant) throws ParkingLotException {
