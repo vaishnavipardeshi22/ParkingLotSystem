@@ -1,6 +1,8 @@
 package com.bridgelabz.parkinglotsystemtest;
 
+import com.bridgelabz.observer.*;
 import com.bridgelabz.parkinglotsystem.*;
+import com.bridgelabz.strategy.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -363,7 +365,6 @@ public class ParkingLotSystemTest {
 
         Object vehicle1 = new Object();
         Object vehicle2 = new Object();
-        Object vehicle3 = new Object();
 
         try {
             parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle);

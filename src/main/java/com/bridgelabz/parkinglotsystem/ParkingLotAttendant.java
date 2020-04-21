@@ -1,5 +1,7 @@
 package com.bridgelabz.parkinglotsystem;
 
+import com.bridgelabz.observer.*;
+
 import java.util.List;
 
 public class ParkingLotAttendant {

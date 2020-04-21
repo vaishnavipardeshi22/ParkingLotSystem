@@ -1,4 +1,4 @@
-package com.bridgelabz.parkinglotsystem;
+package com.bridgelabz.strategy;
 
 public class ParkingFactory {
 

@@ -1,5 +1,7 @@
 package com.bridgelabz.parkinglotsystem;
 
+import com.bridgelabz.strategy.*;
+
 import java.util.*;
 
 public class ParkingLotSystem {
