@@ -8,6 +8,10 @@ public class AirportSecurity implements ParkingLotHandler {
         return this.parkingCapacity;
     }
 
+    public boolean isParkingLotEmpty() {
+        return this.parkingCapacity;
+    }
+
     @Override
     public void parkingIsFull() {
         this.parkingCapacity = true;

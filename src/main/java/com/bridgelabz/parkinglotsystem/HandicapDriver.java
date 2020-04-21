@@ -2,9 +2,7 @@ package com.bridgelabz.parkinglotsystem;
 
 import java.util.List;
 
-public enum HandicapDriver implements ParkingStrategy {
-
-    HANDICAP_DRIVER;
+public class HandicapDriver implements ParkingStrategy {
 
     @Override
     public ParkingLot getParkingLot(List<ParkingLot> parkingLotList) throws ParkingLotException {

@@ -20,13 +20,16 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public void isPark(ParkingStrategy driverType, Object vehicle) throws ParkingLotException {
-        ParkingLot lot = driverType.getParkingLot(this.parkingLotList);
+    public void isPark(Enum driverType, Object vehicle) throws ParkingLotException {
+        ParkingStrategy parkingStrategy = ParkingFactory.getParkingStrategy(driverType);
+        ParkingLot lot = parkingStrategy.getParkingLot(this.parkingLotList);
         lot.isPark(driverType, vehicle);
     }
 
     public boolean isVehiclePark(Object vehicle) {
-        if (this.parkingLotList.get(0).isVehiclePark(vehicle)) return true;
+        for (int i = 0; i < this.parkingLotList.size(); i++) {
+            if (this.parkingLotList.get(i).isVehiclePark(vehicle)) return true;
+        }
         return false;
     }
 

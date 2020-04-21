@@ -7,9 +7,9 @@ public class ParkingTimeSlot {
 
     protected LocalDateTime time;
     protected Object vehicle;
-    private ParkingStrategy driverType;
+    private Enum driverType;
 
-    public ParkingTimeSlot(ParkingStrategy driverType, Object vehicle) {
+    public ParkingTimeSlot(Enum driverType, Object vehicle) {
         this.vehicle = vehicle;
         this.time = LocalDateTime.now();
         this.driverType = driverType;
@@ -18,6 +18,7 @@ public class ParkingTimeSlot {
     public ParkingTimeSlot(Object vehicle) {
         this.vehicle = vehicle;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -7,10 +7,16 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
+    private int vehicleCount;
     private int parkingLotCapacity;
     private List<ParkingTimeSlot> vehicles;
     private List<ParkingLotHandler> parkingLotHandler;
     Map<Integer, Object> vehicleSlotMap = new HashMap<>();
+
+    public ParkingLot() {
+        this.parkingLotHandler = new ArrayList<>();
+        this.vehicles = new ArrayList<>();
+    }
 
     public ParkingLot(int parkingLotCapacity) {
         this.parkingLotCapacity = parkingLotCapacity;
@@ -26,7 +32,7 @@ public class ParkingLot {
         this.parkingLotCapacity = parkingLotCapacity;
     }
 
-    public void isPark(ParkingStrategy driverType, Object vehicle) throws ParkingLotException {
+    public void isPark(Enum driverType, Object vehicle) throws ParkingLotException {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(driverType, vehicle);
         if (!this.vehicles.contains(null)) {
             for (ParkingLotHandler handler : parkingLotHandler)
@@ -37,6 +43,7 @@ public class ParkingLot {
             throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,"Vehicle not found." );
         int slot = getParkingSlot();
         this.vehicles.set(slot, parkingTimeSlot);
+        vehicleCount++;
     }
 
     public boolean isVehiclePark(Object vehicle) {
@@ -50,6 +57,7 @@ public class ParkingLot {
         for (int slotNumber = 0; slotNumber < this.vehicles.size(); slotNumber++ ) {
             if (this.vehicles.contains(parkingTimeSlot)) {
                 this.vehicles.set(slotNumber, null);
+                vehicleCount--;
                 for (ParkingLotHandler handler : parkingLotHandler)
                     handler.parkingIsEmpty();
                 return true;
@@ -70,6 +78,10 @@ public class ParkingLot {
     public int initializeParkingLot() {
         IntStream.range(0, this.parkingLotCapacity).forEach(slots -> vehicles.add(null));
         return vehicles.size();
+    }
+
+    public int getVehicleCount() {
+        return vehicleCount;
     }
 
     public int getParkingSlot() throws ParkingLotException {
