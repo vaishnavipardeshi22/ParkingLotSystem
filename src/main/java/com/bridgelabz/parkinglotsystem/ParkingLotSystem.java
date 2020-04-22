@@ -45,18 +45,25 @@ public class ParkingLotSystem {
     }
 
     public List<List<Integer>> findVehicleByColor(String color) {
-        List<List<Integer>> list = this.parkingLotList.stream()
+        List<List<Integer>> vehicleList = this.parkingLotList.stream()
                 .map(lot -> lot.findByColor(color))
                 .collect(Collectors.toList());
-        return list;
+        return vehicleList;
     }
 
     public List<List<String>> findVehicleByModelNameAndColor(String color, String modelName) {
-        List<List<String>> arrayList = new ArrayList<>();
+        List<List<String>> vehicleList = new ArrayList<>();
         for (ParkingLot list : this.parkingLotList) {
             List<String> lot = list.findByModelAndColor(color, modelName);
-            arrayList.add(lot);
+            vehicleList.add(lot);
         }
-        return arrayList;
+        return vehicleList;
+    }
+
+    public List<List<Integer>> findVehicleByModelName(String modelName) {
+        List<List<Integer>> vehicleList = this.parkingLotList.stream()
+                .map(parkingLot -> parkingLot.findByModelName(modelName))
+                .collect(Collectors.toList());
+        return vehicleList;
     }
 }
