@@ -567,4 +567,43 @@ public class ParkingLotSystemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenParkingLotSystem_ShouldLocateBMWCar() {
+        parkingLot.setParkingLotCapacity(10);
+        parkingLot.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot);
+
+        ParkingLot parkingLot1 = new ParkingLot();
+        parkingLot1.setParkingLotCapacity(10);
+        parkingLot1.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot1);
+
+        ParkingLot parkingLot2 = new ParkingLot();
+        parkingLot2.setParkingLotCapacity(10);
+        parkingLot2.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot2);
+
+        Vehicle vehicle1 = new Vehicle("black", "BMW", "MH-12-1176");
+        Vehicle vehicle2 = new Vehicle("blue", "toyota", "MH-12-1276");
+        Vehicle vehicle3 = new Vehicle("red", "BMW", "MH-12-1376");
+        Vehicle vehicle4 = new Vehicle("white", "toyota", "MH-12-1476");
+        Vehicle vehicle5 = new Vehicle("grey", "toyota", "MH-12-1576");
+
+        try {
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle1, "ABC");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle2, "XYZ");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle3, "ABC");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle4, "PQR");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle5, "ABC");
+
+            List<List<Integer>> expectedList = parkingLotSystem.findVehicleByModelName("BMW");
+            List result = new ArrayList();
+            result.add(0);
+            result.add(2);
+            Assert.assertEquals(result, expectedList.get(0));
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
 }
