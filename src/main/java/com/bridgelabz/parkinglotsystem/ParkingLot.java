@@ -3,6 +3,7 @@ package com.bridgelabz.parkinglotsystem;
 import com.bridgelabz.observer.ParkingLotHandler;
 import com.bridgelabz.observer.ParkingLotOwner;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -159,5 +160,16 @@ public class ParkingLot {
                 .map(parkingTimeSlot -> parkingTimeSlot.getSlot())
                 .collect(Collectors.toList());
         return list;
+    }
+
+    public List<String> findParkedVehicleFromLast30Minute() {
+        List<String> vehicleList = new ArrayList<>();
+        vehicleList = this.vehicles.stream()
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle() != null)
+                .filter(parkingTimeSlot -> parkingTimeSlot.getTime().getMinute() - LocalDateTime.now().getMinute() <= 30)
+                .map(parkingTimeSlot -> (parkingTimeSlot.getSlot()) + " " + (parkingTimeSlot.getVehicle().getModelName())
+                                        + " " + (parkingTimeSlot.getVehicle().getNumberPlate()))
+                .collect(Collectors.toList());
+        return vehicleList;
     }
 }
