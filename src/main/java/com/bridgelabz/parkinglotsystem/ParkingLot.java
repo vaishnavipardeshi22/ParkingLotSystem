@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
@@ -35,16 +36,12 @@ public class ParkingLot {
         this.parkingLotCapacity = parkingLotCapacity;
     }
 
-    public void isPark(Enum driverType, Vehicle vehicle) throws ParkingLotException {
-        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(driverType, vehicle);
-        if (!this.vehicles.contains(null)) {
-            for (ParkingLotHandler handler : parkingLotHandler)
-                handler.parkingIsFull();
-            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
-        }
+    public void isPark(Enum driverType, Vehicle vehicle, String attendantName) throws ParkingLotException {
+        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(driverType, vehicle, attendantName);
         if (isVehiclePark(vehicle))
-            throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
+            throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking is full.");
         int slot = getParkingSlot();
+        parkingTimeSlot.setSlot(slot);
         this.vehicles.set(slot, parkingTimeSlot);
         vehicleCount++;
     }
@@ -56,16 +53,13 @@ public class ParkingLot {
     }
 
     public boolean isUnPark(Vehicle vehicle) throws ParkingLotException {
-        ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
-        for (int slotNumber = 0; slotNumber < this.vehicles.size(); slotNumber++) {
-            if (this.vehicles.contains(parkingTimeSlot)) {
-                this.vehicles.set(slotNumber, null);
-                vehicleCount--;
-                for (ParkingLotHandler handler : parkingLotHandler)
-                    handler.parkingIsEmpty();
-                return true;
-            }
-        }
+        boolean isVehiclePresent = this.vehicles.stream()
+                .filter(parkingTimeSlot -> (vehicle) == parkingTimeSlot.getVehicle())
+                .findFirst()
+                .isPresent();
+        for (ParkingLotHandler handler : parkingLotHandler)
+            handler.parkingIsEmpty();
+        if (isVehiclePresent) return true;
         return false;
     }
 
@@ -79,7 +73,7 @@ public class ParkingLot {
     }
 
     public int initializeParkingLot() {
-        IntStream.range(0, this.parkingLotCapacity).forEach(slots -> vehicles.add(null));
+        IntStream.range(0, this.parkingLotCapacity).forEach(slots -> this.vehicles.add(new ParkingTimeSlot(slots)));
         return vehicles.size();
     }
 
@@ -116,10 +110,13 @@ public class ParkingLot {
     }
 
     public ArrayList getSlot() {
-        ArrayList slots = new ArrayList();
-        for (int slot = 0; slot < this.parkingLotCapacity; slot++) {
-            if (this.vehicles.get(slot) == null)
-                slots.add(slot);
+        ArrayList<Integer> slots = new ArrayList();
+        IntStream.range(0, parkingLotCapacity)
+                .filter(slot -> this.vehicles.get(slot).getVehicle() == null)
+                .forEach(slot -> slots.add(slot));
+        if (slots.size() == 0) {
+            for (ParkingLotHandler handler : parkingLotHandler)
+                handler.parkingIsFull();
         }
         return slots;
     }
@@ -132,14 +129,25 @@ public class ParkingLot {
         return false;
     }
 
-    public ArrayList<Integer> findLocation(String color) {
-        ArrayList<Integer> colourList = new ArrayList<>();
-        for (int i = 0; i < this.vehicles.size(); i++) {
-            if ((this.vehicles.get(i) != null)) {
-                if (this.vehicles.get(i).vehicle.getColor().equals(color))
-                    colourList.add(i);
-            }
-        }
+    public List<Integer> findByColor(String color) {
+        List<Integer> colourList = new ArrayList<>();
+        colourList = this.vehicles.stream()
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle() != null)
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle().getColor().equals(color))
+                .map(parkingTimeSlot -> parkingTimeSlot.getSlot())
+                .collect(Collectors.toList());
         return colourList;
+    }
+
+    public List<String> findByModelAndColor(String color, String modelName) {
+        List<String> list = new ArrayList<>();
+        list = this.vehicles.stream()
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle() != null)
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle().getModelName().equals(modelName))
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle().getColor().equals(color))
+                .map(parkingTimeSlot -> (parkingTimeSlot.getAttendantName()) + " " + (parkingTimeSlot.getSlot()) + " " +
+                                        (parkingTimeSlot.vehicle.getNumberPlate()))
+                .collect(Collectors.toList());
+        return list;
     }
 }

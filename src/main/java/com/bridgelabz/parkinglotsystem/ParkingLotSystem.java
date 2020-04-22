@@ -2,7 +2,9 @@ package com.bridgelabz.parkinglotsystem;
 
 import com.bridgelabz.strategy.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
     private int capacity;
@@ -22,10 +24,10 @@ public class ParkingLotSystem {
         return false;
     }
 
-    public void isPark(Enum driverType, Vehicle vehicle) throws ParkingLotException {
+    public void isPark(Enum driverType, Vehicle vehicle, String attendant) throws ParkingLotException {
         ParkingStrategy parkingStrategy = ParkingFactory.getParkingStrategy(driverType);
         ParkingLot lot = parkingStrategy.getParkingLot(this.parkingLotList);
-        lot.isPark(driverType, vehicle);
+        lot.isPark(driverType, vehicle, attendant);
     }
 
     public boolean isVehiclePark(Vehicle vehicle) {
@@ -42,12 +44,19 @@ public class ParkingLotSystem {
         throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
     }
 
-    public List findVehicleByColor(String color) {
-        List<ArrayList> parkingLot = new ArrayList<>();
-        for (ParkingLot lot : this.parkingLotList) {
-            ArrayList<Integer> location = lot.findLocation(color);
-            parkingLot.add(location);
+    public List<List<Integer>> findVehicleByColor(String color) {
+        List<List<Integer>> list = this.parkingLotList.stream()
+                .map(lot -> lot.findByColor(color))
+                .collect(Collectors.toList());
+        return list;
+    }
+
+    public List<List<String>> findVehicleByModelNameAndColor(String color, String modelName) {
+        List<List<String>> arrayList = new ArrayList<>();
+        for (ParkingLot list : this.parkingLotList) {
+            List<String> lot = list.findByModelAndColor(color, modelName);
+            arrayList.add(lot);
         }
-        return parkingLot;
+        return arrayList;
     }
 }
