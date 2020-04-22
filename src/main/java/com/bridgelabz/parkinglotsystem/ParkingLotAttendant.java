@@ -7,13 +7,13 @@ import java.util.List;
 public class ParkingLotAttendant {
 
     private List<ParkingLotOwner> parkingSlots;
-    private Object vehicle;
+    private Vehicle vehicle;
 
-    public ParkingLotAttendant(Object vehicle) {
+    public ParkingLotAttendant(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
-    public Object getVehicle() {
+    public Vehicle getVehicle() {
         return vehicle;
     }
 }

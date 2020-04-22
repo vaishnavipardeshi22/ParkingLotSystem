@@ -1,6 +1,7 @@
 package com.bridgelabz.parkinglotsystem;
 
-import com.bridgelabz.observer.*;
+import com.bridgelabz.observer.ParkingLotHandler;
+import com.bridgelabz.observer.ParkingLotOwner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,11 +10,11 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class ParkingLot {
+    Map<Integer, Vehicle> vehicleSlotMap = new HashMap<>();
     private int vehicleCount;
     private int parkingLotCapacity;
     private List<ParkingTimeSlot> vehicles;
     private List<ParkingLotHandler> parkingLotHandler;
-    Map<Integer, Object> vehicleSlotMap = new HashMap<>();
 
     public ParkingLot() {
         this.parkingLotHandler = new ArrayList<>();
@@ -34,7 +35,7 @@ public class ParkingLot {
         this.parkingLotCapacity = parkingLotCapacity;
     }
 
-    public void isPark(Enum driverType, Object vehicle) throws ParkingLotException {
+    public void isPark(Enum driverType, Vehicle vehicle) throws ParkingLotException {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(driverType, vehicle);
         if (!this.vehicles.contains(null)) {
             for (ParkingLotHandler handler : parkingLotHandler)
@@ -42,21 +43,21 @@ public class ParkingLot {
             throw new ParkingLotException(ParkingLotException.ExceptionType.PARKING_IS_FULL, "Parking lot is full.");
         }
         if (isVehiclePark(vehicle))
-            throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND,"Vehicle not found." );
+            throw new ParkingLotException(ParkingLotException.ExceptionType.VEHICLE_NOT_FOUND, "Vehicle not found.");
         int slot = getParkingSlot();
         this.vehicles.set(slot, parkingTimeSlot);
         vehicleCount++;
     }
 
-    public boolean isVehiclePark(Object vehicle) {
+    public boolean isVehiclePark(Vehicle vehicle) {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
         if (this.vehicles.contains(parkingTimeSlot)) return true;
         return false;
     }
 
-    public boolean isUnPark(Object vehicle) throws ParkingLotException {
+    public boolean isUnPark(Vehicle vehicle) throws ParkingLotException {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
-        for (int slotNumber = 0; slotNumber < this.vehicles.size(); slotNumber++ ) {
+        for (int slotNumber = 0; slotNumber < this.vehicles.size(); slotNumber++) {
             if (this.vehicles.contains(parkingTimeSlot)) {
                 this.vehicles.set(slotNumber, null);
                 vehicleCount--;
@@ -68,7 +69,7 @@ public class ParkingLot {
         return false;
     }
 
-    public void isPark(int slot, Object vehicle) throws ParkingLotException {
+    public void isPark(int slot, Vehicle vehicle) throws ParkingLotException {
         if (this.vehicleSlotMap.size() == this.parkingLotCapacity) {
             for (ParkingLotHandler handler : parkingLotHandler)
                 handler.parkingIsFull();
@@ -107,7 +108,7 @@ public class ParkingLot {
         throw new ParkingLotException(ParkingLotException.ExceptionType.NO_SUCH_ATTENDANT, "No attendant found.");
     }
 
-    public int findVehicle(Object vehicle) throws ParkingLotException {
+    public int findVehicle(Vehicle vehicle) throws ParkingLotException {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
         if (this.vehicles.contains(parkingTimeSlot))
             return this.vehicles.indexOf(parkingTimeSlot);
@@ -123,12 +124,22 @@ public class ParkingLot {
         return slots;
     }
 
-    public boolean setTime(Object vehicle) {
+    public boolean setTime(Vehicle vehicle) {
         ParkingTimeSlot parkingTimeSlot = new ParkingTimeSlot(vehicle);
         for (int i = 0; i < this.vehicles.size(); i++) {
-            if (this.vehicles.get(i).time != null && this.vehicles.contains(parkingTimeSlot))
-                return true;
+            if (this.vehicles.get(i).time != null && this.vehicles.contains(parkingTimeSlot)) return true;
         }
         return false;
+    }
+
+    public ArrayList<Integer> findLocation(String color) {
+        ArrayList<Integer> colourList = new ArrayList<>();
+        for (int i = 0; i < this.vehicles.size(); i++) {
+            if ((this.vehicles.get(i) != null)) {
+                if (this.vehicles.get(i).vehicle.getColor().equals(color))
+                    colourList.add(i);
+            }
+        }
+        return colourList;
     }
 }

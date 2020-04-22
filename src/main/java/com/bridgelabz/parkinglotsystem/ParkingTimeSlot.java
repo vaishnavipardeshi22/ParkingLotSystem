@@ -6,16 +6,16 @@ import java.util.Objects;
 public class ParkingTimeSlot {
 
     protected LocalDateTime time;
-    protected Object vehicle;
+    protected Vehicle vehicle;
     private Enum driverType;
 
-    public ParkingTimeSlot(Enum driverType, Object vehicle) {
+    public ParkingTimeSlot(Enum driverType, Vehicle vehicle) {
         this.vehicle = vehicle;
         this.time = LocalDateTime.now();
         this.driverType = driverType;
     }
 
-    public ParkingTimeSlot(Object vehicle) {
+    public ParkingTimeSlot(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
