@@ -606,4 +606,33 @@ public class ParkingLotSystemTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void givenParkingLotSystem_ShouldReturnParkedVehiclesFromLast30Minutes() {
+        parkingLot.setParkingLotCapacity(10);
+        parkingLot.initializeParkingLot();
+        Vehicle vehicle1 = new Vehicle("black", "BMW", "MH-12-1176");
+        Vehicle vehicle2 = new Vehicle("blue", "toyota", "MH-12-1276");
+        Vehicle vehicle3 = new Vehicle("red", "BMW", "MH-12-1376");
+        Vehicle vehicle4 = new Vehicle("white", "toyota", "MH-12-1476");
+        Vehicle vehicle5 = new Vehicle("grey", "toyota", "MH-12-1576");
+        try {
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle1, "ABC");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle2, "XYZ");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle3, "ABC");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle4, "PQR");
+            parkingLot.isPark(DriverType.NORMAL_DRIVER, vehicle5, "ABC");
+
+            List<String> vehicleList = parkingLot.findParkedVehicleFromLast30Minute();
+            List expectedResult = new ArrayList();
+            expectedResult.add("0 BMW MH-12-1176");
+            expectedResult.add("1 toyota MH-12-1276");
+            expectedResult.add("2 BMW MH-12-1376");
+            expectedResult.add("3 toyota MH-12-1476");
+            expectedResult.add("4 toyota MH-12-1576");
+            Assert.assertEquals(expectedResult, vehicleList);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
 }
