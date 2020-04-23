@@ -1,6 +1,7 @@
 package com.bridgelabz.parkinglotsystem;
 
-import com.bridgelabz.strategy.*;
+import com.bridgelabz.strategy.ParkingFactory;
+import com.bridgelabz.strategy.ParkingStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +64,14 @@ public class ParkingLotSystem {
     public List<List<Integer>> findVehicleByModelName(String modelName) {
         List<List<Integer>> vehicleList = this.parkingLotList.stream()
                 .map(parkingLot -> parkingLot.findByModelName(modelName))
+                .collect(Collectors.toList());
+        return vehicleList;
+    }
+
+    public List<List<String>> findByLotNumber(ParkingLot parkingLot2, ParkingLot parkingLot4) {
+        List<List<String>> vehicleList = this.parkingLotList.stream()
+                .map(parkingLot -> parkingLot2.getVehicleDetailsByLotNumber())
+                .map(parkingLot -> parkingLot4.getVehicleDetailsByLotNumber())
                 .collect(Collectors.toList());
         return vehicleList;
     }

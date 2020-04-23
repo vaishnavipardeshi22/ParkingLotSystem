@@ -7,6 +7,8 @@ public class ParkingFactory {
             return new HandicapDriver();
         else if (type.equals(VehicleType.LARGE_VEHICLE))
             return new LargeVehicle();
+        else if (type.equals(VehicleType.SMALL_VEHICLE))
+            return new SmallVehicle();
         return new NormalDriver();
     }
 }

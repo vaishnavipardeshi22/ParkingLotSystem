@@ -6,7 +6,7 @@ public class Vehicle {
     private String modelName;
     private String color;
 
-    public Vehicle(){
+    public Vehicle() {
     }
 
     public Vehicle(String color) {
