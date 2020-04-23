@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bridgelabz.strategy.DriverType.HANDICAP_DRIVER;
+
 public class ParkingLotSystemTest {
     ParkingLot parkingLot = null;
     Vehicle vehicle = null;
@@ -392,7 +394,7 @@ public class ParkingLotSystemTest {
 
     @Test
     public void givenDriverTypeIsHandicap_ShouldReturnNearestLot() {
-        ParkingStrategy parkingStrategy = ParkingFactory.getParkingStrategy(DriverType.HANDICAP_DRIVER);
+        ParkingStrategy parkingStrategy = ParkingFactory.getParkingStrategy(HANDICAP_DRIVER);
         List<ParkingLot> lotList = new ArrayList<>();
         ParkingLot lot = new ParkingLot();
         lot.setParkingLotCapacity(10);
@@ -432,7 +434,7 @@ public class ParkingLotSystemTest {
             parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle1, "ABC");
             parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle2, "PQR");
             parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle3, "ABC");
-            parkingLotSystem.isPark(DriverType.HANDICAP_DRIVER, vehicle4, "XYZ");
+            parkingLotSystem.isPark(HANDICAP_DRIVER, vehicle4, "XYZ");
             parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle5, "PQR");
             Assert.assertTrue(true);
         } catch (ParkingLotException e) {
@@ -630,6 +632,61 @@ public class ParkingLotSystemTest {
             expectedResult.add("2 BMW MH-12-1376");
             expectedResult.add("3 toyota MH-12-1476");
             expectedResult.add("4 toyota MH-12-1576");
+            Assert.assertEquals(expectedResult, vehicleList);
+        } catch (ParkingLotException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenParkingLotSystem_ShouldReturnLotNumberOfSmallVehicleAndHandicapDriverVehicle() {
+        ParkingLot parkingLot1 = new ParkingLot();
+        parkingLot1.setParkingLotCapacity(10);
+        parkingLot1.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot1);
+
+        ParkingLot parkingLot2 = new ParkingLot();
+        parkingLot2.setParkingLotCapacity(10);
+        parkingLot2.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot2);
+
+        ParkingLot parkingLot3 = new ParkingLot();
+        parkingLot3.setParkingLotCapacity(10);
+        parkingLot3.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot3);
+
+        ParkingLot parkingLot4 = new ParkingLot();
+        parkingLot4.setParkingLotCapacity(10);
+        parkingLot4.initializeParkingLot();
+        parkingLotSystem.addLots(parkingLot4);
+
+        Vehicle vehicle1 = new Vehicle("black", "BMW", "MH-12-1176");
+        Vehicle vehicle2 = new Vehicle("blue", "toyota", "MH-12-1276");
+        Vehicle vehicle3 = new Vehicle("grey", "BMW", "MH-12-1376");
+        Vehicle vehicle4 = new Vehicle("red", "BMW", "MH-12-1476");
+        Vehicle vehicle5 = new Vehicle("white", "toyota", "MH-12-1576");
+        Vehicle vehicle6 = new Vehicle("blue", "BMW", "MH-12-1676");
+        Vehicle vehicle7 = new Vehicle("black", "toyota", "MH-12-1776");
+        Vehicle vehicle8 = new Vehicle("red", "BMW", "MH-12-1876");
+        Vehicle vehicle9 = new Vehicle("white", "toyota", "MH-12-1976");
+
+        try{
+            parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle1, "ABC");
+            parkingLotSystem.isPark(VehicleType.SMALL_VEHICLE, vehicle2, "XYZ");
+            parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle3, "ABC");
+            parkingLotSystem.isPark(DriverType.HANDICAP_DRIVER, vehicle4, "XYZ");
+            parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle5, "ABC");
+            parkingLotSystem.isPark(DriverType.HANDICAP_DRIVER, vehicle6, "XYZ");
+            parkingLotSystem.isPark(DriverType.NORMAL_DRIVER, vehicle7, "PQR");
+            parkingLotSystem.isPark(VehicleType.SMALL_VEHICLE, vehicle8, "XYZ");
+            parkingLotSystem.isPark(VehicleType.SMALL_VEHICLE, vehicle9, "XYZ");
+
+            List<List<String>> vehicleList = parkingLotSystem.findByLotNumber(parkingLot2, parkingLot4);
+            List expectedResult = new ArrayList();
+            expectedResult.add("toyota MH-12-1276");
+            expectedResult.add("BMW MH-12-1676");
+            expectedResult.add("BMW MH-12-1476");
+            expectedResult.add("BMW MH-12-1876");
             Assert.assertEquals(expectedResult, vehicleList);
         } catch (ParkingLotException e) {
             e.printStackTrace();
