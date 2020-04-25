@@ -3,7 +3,6 @@ package com.bridgelabz.parkinglotsystem;
 import com.bridgelabz.observer.ParkingLotHandler;
 import com.bridgelabz.observer.ParkingLotOwner;
 import com.bridgelabz.strategy.DriverType;
-import com.bridgelabz.strategy.SmallVehicle;
 import com.bridgelabz.strategy.VehicleType;
 
 import java.time.LocalDateTime;
@@ -184,6 +183,15 @@ public class ParkingLot {
                                         (parkingTimeSlot.getDriverType() == VehicleType.SMALL_VEHICLE))
                 .map(parkingTimeSlot -> (parkingTimeSlot.getVehicle().getModelName()) + " " +
                                         (parkingTimeSlot.getVehicle().getNumberPlate()))
+                .collect(Collectors.toList());
+        return vehicleList;
+    }
+
+    public List<String> getVehicleList() {
+        List<String> vehicleList = this.vehicles.stream()
+                .filter(parkingTimeSlot -> parkingTimeSlot.getVehicle() != null)
+                .map(parkingTimeSlot -> (parkingTimeSlot.getSlot()) + " " + (parkingTimeSlot.getVehicle().getModelName())
+                        + " " + (parkingTimeSlot.getVehicle().getNumberPlate()))
                 .collect(Collectors.toList());
         return vehicleList;
     }

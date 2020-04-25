@@ -75,4 +75,11 @@ public class ParkingLotSystem {
                 .collect(Collectors.toList());
         return vehicleList;
     }
+
+    public List<List<String>> getDetailsOfParkedVehicle() {
+        List<List<String>> parkedVehicleList = this.parkingLotList.stream()
+                .map(parkingLot -> parkingLot.getVehicleList())
+                .collect(Collectors.toList());
+        return parkedVehicleList;
+    }
 }

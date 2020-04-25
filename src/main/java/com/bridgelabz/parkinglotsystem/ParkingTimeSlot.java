@@ -11,19 +11,11 @@ public class ParkingTimeSlot {
     private Enum driverType;
     private int slot;
 
-    public Enum getDriverType() {
-        return driverType;
-    }
-
     public ParkingTimeSlot(Enum driverType, Vehicle vehicle, String attendantName) {
         this.vehicle = vehicle;
         this.time = LocalDateTime.now();
         this.driverType = driverType;
         this.attendantName = attendantName;
-    }
-
-    public ParkingTimeSlot(Enum driverType) {
-        this.driverType = driverType;
     }
 
     public ParkingTimeSlot(int slot) {
@@ -32,6 +24,10 @@ public class ParkingTimeSlot {
 
     public ParkingTimeSlot(Vehicle vehicle) {
         this.vehicle = vehicle;
+    }
+
+    public Enum getDriverType() {
+        return driverType;
     }
 
     @Override
